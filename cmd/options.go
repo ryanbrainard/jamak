@@ -13,15 +13,11 @@ type Capabilities struct {
 
 var AppCapabilities = Capabilities {
 	Parsers: map[string]string{
-		"list":         "List",
-		"naver-table":  "Naver Table",
-		"naver-json":   "Naver JSON",
-		"krdict-xml":   "KR Dict XML",
-		"memrise-list": "Memrise List",
+		"srt":         "SRT",
 	},
 	Formatters: map[string]string{
-		"tsv": "TSV: Tab-Separated Values",
-		"csv": "CSV: Comma-Separated Values",
+		"srt":         "SRT",
+		"readlang":         "Readlang audiomap",
 	},
 }
 
@@ -35,16 +31,8 @@ func Keys(m map[string]string) []string {
 
 func ParseOptParser(s string) pkg.ParseFunc {
 	switch s {
-	case "list":
-		return parsers.ParseList
-	case "naver-table":
-		return parsers.ParseNaverTable
-	case "naver-json":
-		return parsers.ParseNaverJSON
-	case "krdict-xml":
-		return parsers.ParseKrDictXML
-	case "memrise-list":
-		return parsers.ParseMemriseList
+	case "srt":
+		return parsers.ParseSRT
 	default:
 		return nil
 	}
@@ -52,20 +40,11 @@ func ParseOptParser(s string) pkg.ParseFunc {
 
 func ParseOptFormatter(s string) pkg.FormatFunc {
 	switch s {
-	case "tsv":
-		return formatters.FormatTSV
-	case "csv":
-		return formatters.FormatCSV
+	//case "srt":
+	//	return formatters.FormatSRT
+	case "readlang":
+		return formatters.FormatReadlang
 	default:
 		return nil
-	}
-}
-
-func ParseOptHanja(s string) string {
-	switch s {
-	case pkg.OPT_HANJA_NONE, pkg.OPT_HANJA_PARENTHESIS:
-		return s
-	default:
-		return ""
 	}
 }

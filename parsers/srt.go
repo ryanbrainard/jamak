@@ -7,7 +7,7 @@ import (
 	"github.com/ryanbrainard/jamak/pkg"
 )
 
-func ParseList(r io.Reader, items chan<- *pkg.Item, options map[string]string) error {
+func ParseSRT(r io.Reader, items chan<- *pkg.Item, options map[string]string) error {
 	scanner := bufio.NewScanner(r)
 
 	for scanner.Scan() {

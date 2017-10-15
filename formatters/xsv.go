@@ -7,6 +7,7 @@ import (
 	"github.com/ryanbrainard/jamak/pkg"
 )
 
+// TODO: rename/remove
 func formatXSV(items <-chan *pkg.Item, w io.Writer, options map[string]string, delim rune) error {
 	writeHeader(w, options)
 	cw := csv.NewWriter(w)
