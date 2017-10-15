@@ -12,12 +12,25 @@ import (
 func FormatReadlang(frames <-chan *pkg.Frame, w io.Writer, options map[string]string) error {
 	book := &ReadlangBook{}
 	for frame := range frames {
-		startTimeStr := strings.Replace(frame.StartTime, ",", ".", 1)
-		startTimeStr = strings.Replace(startTimeStr, "00:00:", "", 1) // TODO: support
-		startTime, err := strconv.ParseFloat(startTimeStr, 64)
+		// TODO: move to parser
+		startTimeSplit := strings.Split(frame.StartTime, ":")
+
+		startTimeHour, err := strconv.ParseFloat(startTimeSplit[0], 64)
 		if err != nil {
 			return err
 		}
+
+		startTimeMin, err := strconv.ParseFloat(startTimeSplit[1], 64)
+		if err != nil {
+			return err
+		}
+
+		startTimeSec, err := strconv.ParseFloat(strings.Replace(startTimeSplit[2], ",", ".", 1), 64)
+		if err != nil {
+			return err
+		}
+
+		startTime := (startTimeHour * 60 * 60) + (startTimeMin * 60) + startTimeSec
 
 		book.AudioMap = append(book.AudioMap, ReadlangAudiomapFrame{
 			StartTime: startTime,
