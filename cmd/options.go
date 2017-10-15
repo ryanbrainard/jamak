@@ -11,13 +11,12 @@ type Capabilities struct {
 	Formatters map[string]string
 }
 
-var AppCapabilities = Capabilities {
+var AppCapabilities = Capabilities{
 	Parsers: map[string]string{
-		"srt":         "SRT",
+		"srt": "SRT",
 	},
 	Formatters: map[string]string{
-		"srt":         "SRT",
-		"readlang":         "Readlang audiomap",
+		"readlang": "Readlang audiomap",
 	},
 }
 
@@ -40,8 +39,6 @@ func ParseOptParser(s string) pkg.ParseFunc {
 
 func ParseOptFormatter(s string) pkg.FormatFunc {
 	switch s {
-	//case "srt":
-	//	return formatters.FormatSRT
 	case "readlang":
 		return formatters.FormatReadlang
 	default:

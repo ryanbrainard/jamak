@@ -4,28 +4,14 @@ import (
 	"io"
 )
 
-type Item struct {
-	Id            string
-	Hangul        string
-	Hanja         string
-	Pronunciation string
-	AudioURL      string
-	Def           Translation
-	Antonym       string
-	Examples      []Translation
+type Frame struct {
+	Number    int
+	StartTime string
+	EndTime   string
+	Text      string
+	StartWord int
 }
 
-type Translation struct {
-	Korean  string
-	English string
-}
+type ParseFunc func(reader io.Reader, items chan<- *Frame, options map[string]string) error
 
-type ParseFunc func(reader io.Reader, items chan<- *Item, options map[string]string) error
-
-type FormatFunc func(items <-chan *Item, writer io.Writer, options map[string]string) error
-
-const OPT_HANJA = "hanja"
-const OPT_HANJA_NONE = "none"
-const OPT_HANJA_PARENTHESIS = "parens"
-const OPT_HEADER = "header"
-const OPT_AUDIODIR = "audiodir"
+type FormatFunc func(items <-chan *Frame, writer io.Writer, options map[string]string) error

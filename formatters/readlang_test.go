@@ -8,32 +8,33 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var testFrames = []*pkg.Frame{
+	{
+		Number:    1,
+		StartTime: "00:00:02,710",
+		EndTime:   "00:00:04,410",
+		Text:      "예전에 영화에서 봤는데",
+		StartWord: 0,
+	}, {
+		Number:    2,
+		StartTime: "00:00:06,923",
+		EndTime:   "00:00:08,453",
+		Text:      "이렇게 앉아있으니까",
+		StartWord: 3,
+	},
+}
+
 func TestFormatReadlang(t *testing.T) {
-	items, out := setupTestFormat()
-	err := FormatReadlang(items, out, map[string]string{})
+	frames, out := setupTestFormat()
+	err := FormatReadlang(frames, out, map[string]string{})
 	assert.Nil(t, err)
-	assert.Equal(t, ",처리,處理,,,,handling,,k,e,,\n", out.String())
+	assert.Equal(t, `{"audioMap":[{"t":2.71,"w":0},{"t":6.923,"w":3}]}`, out.String())
 }
 
-func TestFormatReadlang_Header(t *testing.T) {
-	header := "tag: jamak"
-	items, out := setupTestFormat()
-	err := FormatReadlang(items, out, map[string]string{pkg.OPT_HEADER: header})
-	assert.Nil(t, err)
-	assert.Equal(t, header+"\n,처리,處理,,,,handling,,k,e,,\n", out.String())
-}
-
-func TestFormatReadlang_HanjaMerge(t *testing.T) {
-	items, out := setupTestFormat()
-	err := FormatReadlang(items, out, map[string]string{pkg.OPT_HANJA: pkg.OPT_HANJA_PARENTHESIS})
-	assert.Nil(t, err)
-	assert.Equal(t, ",처리 (處理),處理,,,,handling,,k,e,,\n", out.String())
-}
-
-func setupTestFormat() (<-chan *pkg.Item, *bytes.Buffer) {
-	items := make(chan *pkg.Item, 1)
-	item := &pkg.Item{Hangul: "처리", Hanja: "處理", Def: pkg.Translation{English: "handling"}, Examples: []pkg.Translation{{English: "e", Korean: "k"}}}
-	items <- item
-	close(items)
-	return items, new(bytes.Buffer)
+func setupTestFormat() (<-chan *pkg.Frame, *bytes.Buffer) {
+	frames := make(chan *pkg.Frame, 2)
+	frames <- testFrames[0]
+	frames <- testFrames[1]
+	close(frames)
+	return frames, new(bytes.Buffer)
 }

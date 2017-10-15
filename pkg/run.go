@@ -14,15 +14,15 @@ func Run(in io.Reader, out io.Writer, parse ParseFunc, format FormatFunc, option
 		return fmt.Errorf("Missing or invalid formatter specified")
 	}
 
-	items := make(chan *Item)
+	frames := make(chan *Frame)
 	var err error
 
 	go func() {
-		err = parse(in, items, options)
-		close(items)
+		err = parse(in, frames, options)
+		close(frames)
 	}()
 
-	if err := format(items, out, options); err != nil {
+	if err := format(frames, out, options); err != nil {
 		return err
 	}
 

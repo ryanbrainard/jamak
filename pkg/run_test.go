@@ -12,13 +12,13 @@ import (
 func TestRun(t *testing.T) {
 	in := &bytes.Buffer{}
 	out := &bytes.Buffer{}
-	parser := func(r io.Reader, items chan<- *Item, options map[string]string) error {
-		items <- &Item{Hangul: "시험"}
+	parser := func(r io.Reader, items chan<- *Frame, options map[string]string) error {
+		items <- &Frame{Text: "시험"}
 		return nil
 	}
-	formatter := func(items <-chan *Item, w io.Writer, options map[string]string) error {
+	formatter := func(items <-chan *Frame, w io.Writer, options map[string]string) error {
 		for item := range items {
-			w.Write([]byte(item.Hangul))
+			w.Write([]byte(item.Text))
 		}
 		return nil
 	}
@@ -32,12 +32,12 @@ func TestRun(t *testing.T) {
 func TestRun_ParserError(t *testing.T) {
 	in := &bytes.Buffer{}
 	out := &bytes.Buffer{}
-	parser := func(r io.Reader, items chan<- *Item, options map[string]string) error {
+	parser := func(r io.Reader, items chan<- *Frame, options map[string]string) error {
 		return fmt.Errorf("boom: parser")
 	}
-	formatter := func(items <-chan *Item, w io.Writer, options map[string]string) error {
+	formatter := func(items <-chan *Frame, w io.Writer, options map[string]string) error {
 		for item := range items {
-			w.Write([]byte(item.Hangul))
+			w.Write([]byte(item.Text))
 		}
 		return nil
 	}
@@ -51,12 +51,12 @@ func TestRun_ParserError(t *testing.T) {
 func TestRun_FormatterError(t *testing.T) {
 	in := &bytes.Buffer{}
 	out := &bytes.Buffer{}
-	parser := func(r io.Reader, items chan<- *Item, options map[string]string) error {
-		items <- &Item{Hangul: "시험"}
+	parser := func(r io.Reader, items chan<- *Frame, options map[string]string) error {
+		items <- &Frame{Text: "시험"}
 		close(items)
 		return nil
 	}
-	formatter := func(items <-chan *Item, w io.Writer, options map[string]string) error {
+	formatter := func(items <-chan *Frame, w io.Writer, options map[string]string) error {
 		return fmt.Errorf("boom: formatter")
 	}
 	options := map[string]string{}
@@ -69,7 +69,7 @@ func TestRun_FormatterError(t *testing.T) {
 func TestRun_NilParser(t *testing.T) {
 	in := &bytes.Buffer{}
 	out := &bytes.Buffer{}
-	formatter := func(items <-chan *Item, w io.Writer, options map[string]string) error {
+	formatter := func(items <-chan *Frame, w io.Writer, options map[string]string) error {
 		return nil
 	}
 	options := map[string]string{}
@@ -82,8 +82,8 @@ func TestRun_NilParser(t *testing.T) {
 func TestRun_NilFormatter(t *testing.T) {
 	in := &bytes.Buffer{}
 	out := &bytes.Buffer{}
-	parser := func(r io.Reader, items chan<- *Item, options map[string]string) error {
-		items <- &Item{Hangul: "시험"}
+	parser := func(r io.Reader, items chan<- *Frame, options map[string]string) error {
+		items <- &Frame{Text: "시험"}
 		close(items)
 		return nil
 	}
