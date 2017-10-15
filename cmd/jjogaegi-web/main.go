@@ -9,8 +9,8 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ryanbrainard/jjogaegi/cmd"
-	"github.com/ryanbrainard/jjogaegi/pkg"
+	"github.com/ryanbrainard/jamak/cmd"
+	"github.com/ryanbrainard/jamak/pkg"
 )
 
 func main() {
@@ -21,7 +21,7 @@ func main() {
 
 	router := gin.New()
 	router.Use(gin.Logger())
-	basePath := "cmd/jjogaegi-web"
+	basePath := "cmd/jamak-web"
 	router.LoadHTMLGlob(basePath + "/templates/*.tmpl.html") // TODO: relative path
 	router.Static("/static", basePath+"/static")
 	indexTemplate := "index.tmpl.html"

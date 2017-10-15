@@ -8,7 +8,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/ryanbrainard/jjogaegi/pkg"
+	"github.com/ryanbrainard/jamak/pkg"
 )
 
 func writeHeader(out io.Writer, options map[string]string) {

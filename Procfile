@@ -1,1 +1,1 @@
-web: jjogaegi-web
+web: jamak-web

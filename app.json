@@ -1,5 +1,5 @@
 {
-  "name": "jjogaegi",
+  "name": "jamak",
   "description": "Korean Vocabulary Parser-Formatter",
   "keywords": [
     "korean",
@@ -7,5 +7,5 @@
     "flashcard",
     "go"
   ],
-  "repository": "https://github.com/ryanbrainard/jjogaegi"
+  "repository": "https://github.com/ryanbrainard/jamak"
 }

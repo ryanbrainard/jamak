@@ -7,7 +7,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/ryanbrainard/jjogaegi/pkg"
+	"github.com/ryanbrainard/jamak/pkg"
 	"golang.org/x/net/html"
 )
 

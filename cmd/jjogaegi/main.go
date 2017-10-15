@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ryanbrainard/jjogaegi/cmd"
-	"github.com/ryanbrainard/jjogaegi/pkg"
+	"github.com/ryanbrainard/jamak/cmd"
+	"github.com/ryanbrainard/jamak/pkg"
 )
 
 var fParser = flag.String("parser", "list", "type of parser for input [" + strings.Join(cmd.Keys(cmd.AppCapabilities.Parsers), "|") + "]")

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/ryanbrainard/jjogaegi/pkg"
+	"github.com/ryanbrainard/jamak/pkg"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,7 +16,7 @@ func TestFormatCSV(t *testing.T) {
 }
 
 func TestFormatCSV_Header(t *testing.T) {
-	header := "tag: jjogaegi"
+	header := "tag: jamak"
 	items, out := setupTestFormat()
 	err := FormatCSV(items, out, map[string]string{pkg.OPT_HEADER: header})
 	assert.Nil(t, err)

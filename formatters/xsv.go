@@ -4,7 +4,7 @@ import (
 	"encoding/csv"
 	"io"
 
-	"github.com/ryanbrainard/jjogaegi/pkg"
+	"github.com/ryanbrainard/jamak/pkg"
 )
 
 func formatXSV(items <-chan *pkg.Item, w io.Writer, options map[string]string, delim rune) error {

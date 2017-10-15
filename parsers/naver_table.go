@@ -5,7 +5,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/ryanbrainard/jjogaegi/pkg"
+	"github.com/ryanbrainard/jamak/pkg"
 )
 
 func ParseNaverTable(r io.Reader, items chan<- *pkg.Item, options map[string]string) error {

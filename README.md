@@ -1,18 +1,18 @@
-# jjogaegi (쪼개기)
+# jamak (쪼개기)
 
 Parses Korean vocabulary and formats items for easy importing from lists or dictionaries into [Quizlet](https://quizlet.com/), [Anki](http://ankisrs.net/), and other flashcard apps.
 
-![jjogaegi flow](assets/jjogaegi-flow.png)
+![jamak flow](assets/jamak-flow.png)
 
 ## Installation
 
-First install [Go](https://golang.org/doc/install) and then install `jjogaegi`:
+First install [Go](https://golang.org/doc/install) and then install `jamak`:
 
-    $ go get github.com/ryanbrainard/jjogaegi/cmd/jjogaegi
+    $ go get github.com/ryanbrainard/jamak/cmd/jamak
 
 ## Usage
 
-`jjogaegi` is a small, sharp UNIX-like tool. As such, it only reads from stdin and writes to stdout, so it can be used in a pipeline. Use a command like `cat` or `pbpaste` to input a file or the clipboard, and then use redirection (i.e. `>`) or `pbpaste` to output back to a file or the clipboard.
+`jamak` is a small, sharp UNIX-like tool. As such, it only reads from stdin and writes to stdout, so it can be used in a pipeline. Use a command like `cat` or `pbpaste` to input a file or the clipboard, and then use redirection (i.e. `>`) or `pbpaste` to output back to a file or the clipboard.
 
 This application also includes a [web interface](#web-interface) with a simplified set of options.
 
@@ -29,7 +29,7 @@ For example, if there is a file named `input.txt` that looks like this:
 It can be processed and written to `output.tsv` like this:
 
 ```sh
-$ cat input.txt | jjogaegi > output.tsv
+$ cat input.txt | jamak > output.tsv
 ```
 
 The resulting file will be in tab-separated format:
@@ -47,7 +47,7 @@ The output can then be imported into your favorite flashcard app.
 Alternatively, if you'd rather work with just data from/to the clipboard, use `pbpaste` and `pbcopy` on MacOS:
 
 ```sh
-$ pbpaste | jjogaegi | pbcopy
+$ pbpaste | jamak | pbcopy
 ```
 
 The examples above shows processing without any options. This processes a simple list and outputs a TSV by default; however, the parser for the input and formatter for the output can be customized. See examples and options below for details.
@@ -100,8 +100,8 @@ This application also has a web interface with a simplified set of options, whic
 Make sure you have [Go](http://golang.org/doc/install) and the [Heroku Toolbelt](https://toolbelt.heroku.com/) installed.
 
 ```sh
-$ go get -u github.com/ryanbrainard/jjogaegi
-$ cd $GOPATH/src/github.com/ryanbrainard/jjogaegi
+$ go get -u github.com/ryanbrainard/jamak
+$ cd $GOPATH/src/github.com/ryanbrainard/jamak
 $ heroku local
 ```
 
@@ -121,11 +121,11 @@ or
 
 # Examples
 
-The following are examples of using `jjogaegi` for common use cases:
+The following are examples of using `jamak` for common use cases:
 
 ## Importing 한국어기초사전 Word Books into Anki
 
-The [National Institute of Korean Basic Dictionary (국립국어원 한국어기초사전)](https://krdict.korean.go.kr) allows word books to be downloaded in XML format, which are ideal for parsing with `jjogaegi` and creating flashcards.  The dictionary itself is designed for learners with simple definitions, audio samples, example sentences, and is translated into 10 languages. The word books can currently only be created in the Korean dictionary; however, `jjogaegi` will download the English definitions and Korean audio during processing. To keep flashcards simple, only the first definition and two examples are exported per entry.
+The [National Institute of Korean Basic Dictionary (국립국어원 한국어기초사전)](https://krdict.korean.go.kr) allows word books to be downloaded in XML format, which are ideal for parsing with `jamak` and creating flashcards.  The dictionary itself is designed for learners with simple definitions, audio samples, example sentences, and is translated into 10 languages. The word books can currently only be created in the Korean dictionary; however, `jamak` will download the English definitions and Korean audio during processing. To keep flashcards simple, only the first definition and two examples are exported per entry.
 
 Here's how to export XML from the dictionary:
 
@@ -141,16 +141,16 @@ Here's how to export XML from the dictionary:
 1. Find the completed export and click **내려받기**.
 1. Save the file to your computer (shown as `input.xml` below).
 
-Now, you can use `jjogaegi` to convert the XML file into a TSV file for [Anki](https://apps.ankiweb.net/) . Make sure you have `jjogaegi` [installed](#installation) and run:
+Now, you can use `jamak` to convert the XML file into a TSV file for [Anki](https://apps.ankiweb.net/) . Make sure you have `jamak` [installed](#installation) and run:
 
 ```sh
-$ cat input.xml | jjogaegi --parser krdict-xml --header 'tags: example' --audiodir '/path/to/anki/media' > output.tsv
+$ cat input.xml | jamak --parser krdict-xml --header 'tags: example' --audiodir '/path/to/anki/media' > output.tsv
 ```
 
 Let's break down this command a bit:
 
  - `cat input.xml |` prints the XML file and pipes it to the next command.
- - `jjogaegi` processes the XML with options:
+ - `jamak` processes the XML with options:
      - `--parser krdict-xml` sets the parser for this dictionary.
      - `--header 'tags: example'` sets [tags for Anki](https://apps.ankiweb.net/docs/manual.html#adding-tags).
      - `--audiodir '/path/to/anki/media'` sets the the directory to download audio files. See [Anki file locations](https://apps.ankiweb.net/docs/manual.html#files) for details on what this should be set to on your computer.

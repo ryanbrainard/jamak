@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"github.com/ryanbrainard/jjogaegi/formatters"
-	"github.com/ryanbrainard/jjogaegi/parsers"
-	"github.com/ryanbrainard/jjogaegi/pkg"
+	"github.com/ryanbrainard/jamak/formatters"
+	"github.com/ryanbrainard/jamak/parsers"
+	"github.com/ryanbrainard/jamak/pkg"
 )
 
 type Capabilities struct {

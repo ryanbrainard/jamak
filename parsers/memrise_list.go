@@ -5,7 +5,7 @@ import (
 
 	"bufio"
 
-	"github.com/ryanbrainard/jjogaegi/pkg"
+	"github.com/ryanbrainard/jamak/pkg"
 )
 
 func ParseMemriseList(r io.Reader, items chan<- *pkg.Item, options map[string]string) error {

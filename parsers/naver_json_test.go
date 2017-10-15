@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/ryanbrainard/jjogaegi/pkg"
+	"github.com/ryanbrainard/jamak/pkg"
 	"github.com/stretchr/testify/assert"
 )
 
