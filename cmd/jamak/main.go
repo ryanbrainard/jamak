@@ -9,8 +9,8 @@ import (
 	"github.com/ryanbrainard/jamak/pkg"
 )
 
-var fParser = flag.String("parser", "srt", "type of parser for input ["+strings.Join(cmd.Keys(cmd.AppCapabilities.Parsers), "|")+"]")
-var fFormatter = flag.String("formatter", "readlang", "type of formatter for output ["+strings.Join(cmd.Keys(cmd.AppCapabilities.Formatters), "|")+"]")
+var fParser = flag.String("parser", "", "type of parser for input ["+strings.Join(cmd.Keys(cmd.AppCapabilities.Parsers), "|")+"]")
+var fFormatter = flag.String("formatter", "", "type of formatter for output ["+strings.Join(cmd.Keys(cmd.AppCapabilities.Formatters), "|")+"]")
 
 func main() {
 	flag.Parse()
