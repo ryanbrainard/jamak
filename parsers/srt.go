@@ -19,6 +19,8 @@ func ParseSRT(r io.Reader, frames chan<- *pkg.Frame, options map[string]string) 
 		line := scanner.Text()
 
 		if strings.TrimSpace(line) == "" {
+			frames <- frame
+			frame = &pkg.Frame{}
 			continue
 		}
 
@@ -39,13 +41,20 @@ func ParseSRT(r io.Reader, frames chan<- *pkg.Frame, options map[string]string) 
 			continue
 		}
 
-		frame.Text = line
-
-		frame.StartWord = wordCount
+		if frame.StartWord == 0 {
+			frame.StartWord = wordCount
+		}
 		wordCount = wordCount + strings.Count(line, " ") + 1
 
+		if frame.Text != "" {
+			frame.Text += "\n"
+		}
+
+		frame.Text += line
+	}
+
+	if frame.Text != "" {
 		frames <- frame
-		frame = &pkg.Frame{}
 	}
 
 	return nil
