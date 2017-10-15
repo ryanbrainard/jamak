@@ -13,7 +13,8 @@ type Capabilities struct {
 
 var AppCapabilities = Capabilities{
 	Parsers: map[string]string{
-		"srt": "SRT",
+		"downsub": "DownSub",
+		"srt":     "SRT",
 	},
 	Formatters: map[string]string{
 		"readlang": "Readlang audiomap",
@@ -30,6 +31,8 @@ func Keys(m map[string]string) []string {
 
 func ParseOptParser(s string) pkg.ParseFunc {
 	switch s {
+	case "downsub":
+		return parsers.ParseDownsub
 	case "srt":
 		return parsers.ParseSRT
 	default:

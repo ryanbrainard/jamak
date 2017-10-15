@@ -52,7 +52,7 @@ func FormatReadlang(frames <-chan *pkg.Frame, w io.Writer, options map[string]st
 
 type ReadlangBook struct {
 	AudioMap []ReadlangAudiomapFrame `json:"audioMap"`
-	Body string `json:"body"`
+	Body     string                  `json:"body"`
 }
 
 type ReadlangAudiomapFrame struct {
