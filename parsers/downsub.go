@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"fmt"
 )
 
 func ParseDownsub(r io.Reader, frames chan<- *pkg.Frame, options map[string]string) error {
@@ -31,49 +32,77 @@ func ParseDownsub(r io.Reader, frames chan<- *pkg.Frame, options map[string]stri
 	}
 	defer resp.Body.Close()
 
-	subtitleUrl, err := baseUrl.Parse(extractSubtitleUrl(resp.Body))
+	title, srtRelUrl := extractTitleSrtUrl(resp.Body)
+	if title == "" {
+		return fmt.Errorf("extraction-failed part=title")
+	}
+	if srtRelUrl == "" {
+		return fmt.Errorf("extraction-failed part=srt-url")
+	}
+
+	options[pkg.OPT_READLANG_TITLE] = title
+
+	srtUrl, err := baseUrl.Parse(srtRelUrl)
 	if err != nil {
 		return err
 	}
 
-	resp, err = http.Get(subtitleUrl.String())
+	resp, err = http.Get(srtUrl.String())
 	if err != nil {
-		log.Printf("download type=downsub.srt url=%q err=%q", subtitleUrl.String(), err)
+		log.Printf("download type=downsub.srt url=%q err=%q", srtUrl.String(), err)
 		return err
 	}
 	defer resp.Body.Close()
 
-	// TODO: extract title!
-
 	return ParseSRT(resp.Body, frames, options)
 }
 
-func extractSubtitleUrl(r io.Reader) string {
+// dirty, dirty screen scrapping
+func extractTitleSrtUrl(r io.Reader) (title string, srtUrl string) {
 	z := html.NewTokenizer(r)
-	stack := &tokenStack{}
+	titleStack := &tokenStack{}
+	srtStack := &tokenStack{}
 	for {
 		switch z.Next() {
 		case html.StartTagToken:
-			if string(z.Raw()) == `<div class="panel-body col-md-7 col-sm-7" id="show">` {
-				stack.Push(z.Token())
+			if string(z.Raw()) == `<span class="media-heading" style="font-weight: bold;">` {
+				titleStack.Push(z.Token())
 			}
-			if stack.Depth() > 0 {
+
+			if string(z.Raw()) == `<div class="panel-body col-md-7 col-sm-7" id="show">` {
+				srtStack.Push(z.Token())
+			}
+			if srtStack.Depth() > 0 {
 				name, _ := z.TagName()
 				if string(name) == "a" {
-					stack.Push(z.Token())
+					srtStack.Push(z.Token())
 				}
 			}
-			if stack.Depth() > 1 {
+			if srtStack.Depth() > 1 {
 				key, value, _ := z.TagAttr()
 				if string(key) == "href" {
-					stack.Push(z.Token())
-					return string(value)
+					srtStack.Push(z.Token())
+					srtUrl = string(value)
+					return
+				}
+			}
+		case html.TextToken:
+			if titleStack.Depth() > 0 {
+				title = string(z.Text())
+				titleStack.Pop()
+			}
+		case html.EndTagToken:
+			for _, stack := range []*tokenStack{titleStack, srtStack} {
+				if stack.Depth() > 0 && stack.Peek().Data == z.Token().Data {
+					stack.Pop()
 				}
 			}
 		case html.ErrorToken:
-			return ""
+			return
 		}
 	}
+	
+	return
 }
 
 type tokenStack struct {

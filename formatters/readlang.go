@@ -32,6 +32,7 @@ func FormatReadlang(frames <-chan *pkg.Frame, w io.Writer, options map[string]st
 
 		startTime := (startTimeHour * 60 * 60) + (startTimeMin * 60) + startTimeSec
 
+		book.Title = options[pkg.OPT_READLANG_TITLE]
 		book.Body += frame.Text + "\n\n"
 		book.AudioMap = append(book.AudioMap, ReadlangAudiomapFrame{
 			StartTime: startTime,
@@ -53,6 +54,7 @@ func FormatReadlang(frames <-chan *pkg.Frame, w io.Writer, options map[string]st
 type ReadlangBook struct {
 	AudioMap []ReadlangAudiomapFrame `json:"audioMap"`
 	Body     string                  `json:"body"`
+	Title    string                   `json:"title"`
 }
 
 type ReadlangAudiomapFrame struct {

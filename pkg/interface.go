@@ -15,3 +15,5 @@ type Frame struct {
 type ParseFunc func(reader io.Reader, items chan<- *Frame, options map[string]string) error
 
 type FormatFunc func(items <-chan *Frame, writer io.Writer, options map[string]string) error
+
+const OPT_READLANG_TITLE = "readlang.title"
