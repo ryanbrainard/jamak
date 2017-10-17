@@ -96,7 +96,7 @@ func readlangApiUpsert(method string, path string, body io.Reader, options map[s
 type CreateBookRequest struct {
 	Title    string `json:"title"`
 	Body     string `json:"body"`
-	Language string `json:"body,omitempty"`
+	Language string `json:"language,omitempty"`
 	Public   bool   `json:"public"`
 	Source   string `json:"source"`
 }
