@@ -9,7 +9,10 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"regexp"
 )
+
+var YOUTUBE_REGEX = regexp.MustCompile(`^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$`)
 
 func ParseDownsub(r io.Reader, frames chan<- *pkg.Frame, options map[string]string) error {
 	videoUrlBytes, err := ioutil.ReadAll(r)
@@ -21,6 +24,12 @@ func ParseDownsub(r io.Reader, frames chan<- *pkg.Frame, options map[string]stri
 	if err != nil {
 		return err
 	}
+
+	youtubeUrlMatches := YOUTUBE_REGEX.FindStringSubmatch(videoUrl.String())
+	if youtubeUrlMatches == nil || len(youtubeUrlMatches) < 6 {
+		return fmt.Errorf("invalid YouTube URL: %s", videoUrl)
+	}
+	options[pkg.OPT_READLANG_YOUTUBEID] = youtubeUrlMatches[5]
 
 	baseUrl, _ := url.Parse("http://downsub.com")
 	searchUrl, _ := baseUrl.Parse("/?url=" + url.QueryEscape(videoUrl.String()))

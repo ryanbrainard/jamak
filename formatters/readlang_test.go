@@ -26,9 +26,9 @@ var testFrames = []*pkg.Frame{
 
 func TestFormatReadlang(t *testing.T) {
 	frames, out := setupTestFormat()
-	err := FormatReadlang(frames, out, map[string]string{pkg.OPT_READLANG_TITLE: "Test Title"})
+	err := FormatReadlang(frames, out, map[string]string{pkg.OPT_READLANG_TITLE: "Test Title", pkg.OPT_READLANG_YOUTUBEID: "4WSJrpo0EPQ"})
 	assert.Nil(t, err)
-	assert.Equal(t, `{"title":"Test Title","plainText":"예전에 영화에서 봤는데\n\n이렇게 앉아있으니까\n\n","htmlMarkup":false,"generatedVersion":0,"audioMap":[{"t":2.71,"w":0},{"t":6.923,"w":3}]}`, out.String())
+	assert.Equal(t, `{"title":"Test Title","plainText":"예전에 영화에서 봤는데\n\n이렇게 앉아있으니까\n\n","htmlMarkup":false,"generatedVersion":0,"youTubeID":"4WSJrpo0EPQ","audioMap":[{"t":2.71,"w":0},{"t":6.923,"w":3}]}`, out.String())
 }
 
 func setupTestFormat() (<-chan *pkg.Frame, *bytes.Buffer) {

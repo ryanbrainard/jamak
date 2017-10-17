@@ -33,6 +33,7 @@ func FormatReadlang(frames <-chan *pkg.Frame, w io.Writer, options map[string]st
 
 		book.Title = options[pkg.OPT_READLANG_TITLE]
 		book.Body += frame.Text + "\n\n"
+		book.YouTubeID = options[pkg.OPT_READLANG_YOUTUBEID]
 		book.AudioMap = append(book.AudioMap, ReadlangAudiomapFrame{
 			StartTime: startTime,
 			StartWord: frame.StartWord,
@@ -54,6 +55,7 @@ type ReadlangBook struct {
 	Body             string                  `json:"plainText"`
 	HtmlMarkup       bool                    `json:"htmlMarkup"`       // always false
 	GeneratedVersion int                     `json:"generatedVersion"` // always 0
+	YouTubeID        string                  `json:"youTubeID"`
 	AudioMap         []ReadlangAudiomapFrame `json:"audioMap"`
 }
 
