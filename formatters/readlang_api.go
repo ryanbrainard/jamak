@@ -27,19 +27,15 @@ func FormatReadlangApi(frames <-chan *pkg.Frame, w io.Writer, options map[string
 		}
 	}
 
-	updateReader, updateWriter := io.Pipe()
+	// TODO: why isn't this working with a pipe?
+	buf := &bytes.Buffer{}
 
-	formatErrChan := make(chan error, 1)
-	go func() {
-		formatErrChan <- FormatReadlang(frames, updateWriter, options)
-	}()
-
-	_, err = readlangApiUpsert("PATCH", "/book/"+bookId, updateReader, options)
+	err = FormatReadlang(frames, buf, options)
 	if err != nil {
 		return err
 	}
 
-	err = <-formatErrChan
+	_, err = readlangApiUpsert("PATCH", "/book/"+bookId, buf, options)
 	if err != nil {
 		return err
 	}
