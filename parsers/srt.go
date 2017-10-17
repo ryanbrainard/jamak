@@ -16,9 +16,9 @@ func ParseSRT(r io.Reader, frames chan<- *pkg.Frame, options map[string]string) 
 	wordCount := 0
 
 	for scanner.Scan() {
-		line := scanner.Text()
+		line := strings.TrimSpace(scanner.Text())
 
-		if strings.TrimSpace(line) == "" {
+		if line == "" {
 			frames <- frame
 			frame = &pkg.Frame{}
 			continue
