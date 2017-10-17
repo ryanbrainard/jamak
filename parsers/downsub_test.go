@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/ryanbrainard/jamak/pkg"
-	"strings"
 	"github.com/stretchr/testify/require"
+	"strings"
 )
 
 func TestParseDownsub(t *testing.T) {

@@ -1,6 +1,7 @@
 package parsers
 
 import (
+	"fmt"
 	"github.com/ryanbrainard/jamak/pkg"
 	"golang.org/x/net/html"
 	"io"
@@ -8,7 +9,6 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"fmt"
 )
 
 func ParseDownsub(r io.Reader, frames chan<- *pkg.Frame, options map[string]string) error {
@@ -101,7 +101,7 @@ func extractTitleSrtUrl(r io.Reader) (title string, srtUrl string) {
 			return
 		}
 	}
-	
+
 	return
 }
 
