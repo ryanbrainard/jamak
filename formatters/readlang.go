@@ -11,6 +11,7 @@ import (
 
 func FormatReadlang(frames <-chan *pkg.Frame, w io.Writer, options map[string]string) error {
 	book := &ReadlangBook{}
+
 	for frame := range frames {
 		startTimeSplit := strings.Split(frame.StartTime, ":")
 
@@ -45,18 +46,21 @@ func FormatReadlang(frames <-chan *pkg.Frame, w io.Writer, options map[string]st
 		return err
 	}
 
-	w.Write(bookJson)
+	_, err = w.Write(bookJson)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
 
 type ReadlangBook struct {
-	Title            string                  `json:"title"`
-	Body             string                  `json:"plainText"`
+	Title            string                  `json:"title,omitempty"`
+	Body             string                  `json:"plainText,omitempty"`
 	HtmlMarkup       bool                    `json:"htmlMarkup"`       // always false
 	GeneratedVersion int                     `json:"generatedVersion"` // always 0
-	YouTubeID        string                  `json:"youTubeID"`
-	AudioMap         []ReadlangAudiomapFrame `json:"audioMap"`
+	YouTubeID        string                  `json:"youTubeID,omitempty"`
+	AudioMap         []ReadlangAudiomapFrame `json:"audioMap,omitempty"`
 }
 
 type ReadlangAudiomapFrame struct {
