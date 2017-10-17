@@ -44,6 +44,8 @@ func ParseOptFormatter(s string) pkg.FormatFunc {
 	switch s {
 	case "readlang":
 		return formatters.FormatReadlang
+	case "readlang-api":
+		return formatters.FormatReadlangApi
 	default:
 		return nil
 	}

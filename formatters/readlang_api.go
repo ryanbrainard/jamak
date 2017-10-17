@@ -47,7 +47,8 @@ func FormatReadlangApi(frames <-chan *pkg.Frame, w io.Writer, options map[string
 func readlangCreateTempBook(options map[string]string) (string, error) {
 	reqBody, err := json.Marshal(CreateBookRequest{
 		Title:  "jamak temp title",
-		Body:   "jamak temp body",
+		Body: "jamak temp body",
+		Language: options[pkg.OPT_READLANG_LANGUAGE],
 		Public: false,
 		Source: "jamak",
 	})
@@ -93,10 +94,11 @@ func readlangApiUpsert(method string, path string, body io.Reader, options map[s
 }
 
 type CreateBookRequest struct {
-	Title  string `json:"title"`
-	Body   string `json:"body"`
-	Public bool   `json:"public"`
-	Source string `json:"source"`
+	Title    string `json:"title"`
+	Body     string `json:"body"`
+	Language string `json:"body,omitempty"`
+	Public   bool   `json:"public"`
+	Source   string `json:"source"`
 }
 
 type UpsertBookResult struct {

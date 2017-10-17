@@ -11,6 +11,9 @@ import (
 
 var fParser = flag.String("parser", "", "type of parser for input ["+strings.Join(cmd.Keys(cmd.AppCapabilities.Parsers), "|")+"]")
 var fFormatter = flag.String("formatter", "", "type of formatter for output ["+strings.Join(cmd.Keys(cmd.AppCapabilities.Formatters), "|")+"]")
+var fReadlangAccessToken = flag.String(pkg.OPT_READLANG_ACCESS_TOKEN, "", "")
+var fReadlangBookId = flag.String(pkg.OPT_READLANG_BOOK_ID, "", "")
+var fReadlangLanguage = flag.String(pkg.OPT_READLANG_LANGUAGE, "", "")
 
 func main() {
 	flag.Parse()
@@ -19,7 +22,11 @@ func main() {
 		os.Stdout,
 		cmd.ParseOptParser(*fParser),
 		cmd.ParseOptFormatter(*fFormatter),
-		map[string]string{},
+		map[string]string{
+			pkg.OPT_READLANG_ACCESS_TOKEN: *fReadlangAccessToken,
+			pkg.OPT_READLANG_BOOK_ID: *fReadlangBookId,
+			pkg.OPT_READLANG_LANGUAGE: *fReadlangLanguage,
+		},
 	)
 	if err != nil {
 		os.Stderr.WriteString(err.Error() + "\n")
