@@ -26,14 +26,6 @@ var AppCapabilities = Capabilities{
 	Formatters: mapKeysFormatters(registeredFormatters),
 }
 
-func Keys(m map[string]string) []string {
-	keys := []string{}
-	for k := range m {
-		keys = append(keys, k)
-	}
-	return keys
-}
-
 func ParseOptParser(s string) pkg.ParseFunc {
 	return registeredParsers[s]
 }
