@@ -27,6 +27,7 @@ func main() {
 	router.Static("/static", basePath+"/static")
 	indexTemplate := "index.tmpl.html"
 	render := func(c *gin.Context, m Model, code int) {
+		c.Header("Access-Control-Allow-Origin", "*")
 		c.Negotiate(code, gin.Negotiate{
 			Offered:  []string{binding.MIMEHTML, binding.MIMEJSON},
 			HTMLName: indexTemplate,
@@ -37,6 +38,7 @@ func main() {
 
 	router.OPTIONS("", func(c *gin.Context) {
 		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	})
 
 	router.GET("/", func(c *gin.Context) {
