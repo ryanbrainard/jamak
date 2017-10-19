@@ -68,15 +68,17 @@ The parser and formatter can be set for different inputs and outputs.
 
 Options for `--parser` flag:
 
- - `srt`: (default) SRT format.
+ - `youtube`: YouTube URL.
+ - `srt`: SRT format.
 
 ## Formatters
 
 Options for `--formatter` flag:
 
- - `srt`: (default) SRT format
+ - `srt`: SRT format
  - `readlang`: Readlang audiomap format
- 
+ - `readlang-api`: Creates Readlang book and outputs URL
+
 # Web Interface
 
 This application also has a web interface with a simplified set of options, which can easily be run locally or deployed to Heroku.

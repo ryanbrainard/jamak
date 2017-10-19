@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"github.com/ryanbrainard/jamak/cmd"
 	"github.com/ryanbrainard/jamak/pkg"
 )
@@ -25,6 +26,14 @@ func main() {
 	router.LoadHTMLGlob(basePath + "/templates/*.tmpl.html") // TODO: relative path
 	router.Static("/static", basePath+"/static")
 	indexTemplate := "index.tmpl.html"
+	render := func(c *gin.Context, m Model, code int) {
+		c.Negotiate(code, gin.Negotiate{
+			Offered:  []string{binding.MIMEHTML, binding.MIMEJSON},
+			HTMLName: indexTemplate,
+			HTMLData: m,
+			JSONData: m,
+		})
+	}
 
 	router.GET("/", func(c *gin.Context) {
 		var m Model
@@ -33,11 +42,11 @@ func main() {
 		if err := c.Bind(&m); err != nil {
 			log.Printf("at=get.bind error=%q", err)
 			m.Error = fmt.Sprint(err)
-			c.HTML(http.StatusBadRequest, indexTemplate, m)
+			render(c, m, http.StatusBadRequest)
 			return
 		}
 
-		c.HTML(http.StatusOK, indexTemplate, m)
+		render(c, m, http.StatusOK)
 	})
 
 	router.POST("/", func(c *gin.Context) {
@@ -47,7 +56,7 @@ func main() {
 		if err := c.Bind(&m); err != nil {
 			log.Printf("at=post.bind error=%q", err)
 			m.Error = err.Error()
-			c.HTML(http.StatusBadRequest, indexTemplate, m)
+			render(c, m, http.StatusBadRequest)
 			return
 		}
 
@@ -58,30 +67,32 @@ func main() {
 			output,
 			cmd.ParseOptParser(m.Parser),
 			cmd.ParseOptFormatter(m.Formatter),
-			map[string]string{},
+			m.Options,
 		)
 
 		if err != nil {
 			log.Printf("at=post.run error=%q", err)
 			m.Error = err.Error()
-			c.HTML(http.StatusBadRequest, indexTemplate, m)
+			render(c, m, http.StatusBadRequest)
 			return
 		}
 
 		m.Output = output.String()
-		c.HTML(http.StatusOK, indexTemplate, m)
+
+		render(c, m, http.StatusOK)
 	})
 
 	router.Run(":" + port)
 }
 
-// TODO: rename
+// TODO: rename; break out into separate models, but KISS for now
 type Model struct {
-	Input        string `form:"input"`
-	Output       string
-	Error        string
-	Parser       string `form:"parser"`
-	Formatter    string `form:"formatter"`
+	Input        string `form:"input"     json:"input"`
+	Output       string `form:"output"    json:"output"`
+	Error        string `form:"error"     json:"error"`
+	Parser       string `form:"parser"    json:"parser"`
+	Formatter    string `form:"formatter" json:"formatter"`
+	Options      map[string]string `form:"options"   json:"options"`
 	Capabilities cmd.Capabilities
 }
 

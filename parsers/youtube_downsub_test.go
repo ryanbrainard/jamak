@@ -8,12 +8,12 @@ import (
 	"strings"
 )
 
-func TestParseDownsub(t *testing.T) {
+func TestParseYoutubeDownsub(t *testing.T) {
 	videoUrl := strings.NewReader("https://youtu.be/4WSJrpo0EPQ")
 
 	frames := make(chan *pkg.Frame, 100)
 	opts := map[string]string{}
-	err := ParseDownsub(videoUrl, frames, opts)
+	err := ParseYoutubeDownsub(videoUrl, frames, opts)
 	require.NoError(t, err)
 	require.Equal(t, testFrames[0], <-frames)
 	require.Equal(t, opts[pkg.OPT_READLANG_YOUTUBEID], "4WSJrpo0EPQ")

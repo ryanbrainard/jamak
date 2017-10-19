@@ -15,7 +15,7 @@ import (
 
 var YOUTUBE_REGEX = regexp.MustCompile(`^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$`)
 
-func ParseDownsub(r io.Reader, frames chan<- *pkg.Frame, options map[string]string) error {
+func ParseYoutubeDownsub(r io.Reader, frames chan<- *pkg.Frame, options map[string]string) error {
 	videoUrlBytes, err := ioutil.ReadAll(r)
 	if err != nil {
 		return err

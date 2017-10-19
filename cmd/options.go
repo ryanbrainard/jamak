@@ -6,19 +6,24 @@ import (
 	"github.com/ryanbrainard/jamak/pkg"
 )
 
+var registeredParsers = map[string]pkg.ParseFunc{
+	"youtube": parsers.ParseYoutubeDownsub,
+	"srt":     parsers.ParseSRT,
+}
+
+var registeredFormatters = map[string]pkg.FormatFunc{
+	"readlang":     formatters.FormatReadlang,
+	"readlang-api": formatters.FormatReadlangApi,
+}
+
 type Capabilities struct {
-	Parsers    map[string]string
-	Formatters map[string]string
+	Parsers    []string
+	Formatters []string
 }
 
 var AppCapabilities = Capabilities{
-	Parsers: map[string]string{
-		"downsub": "DownSub",
-		"srt":     "SRT",
-	},
-	Formatters: map[string]string{
-		"readlang": "Readlang audiomap",
-	},
+	Parsers:    mapKeysParsers(registeredParsers),
+	Formatters: mapKeysFormatters(registeredFormatters),
 }
 
 func Keys(m map[string]string) []string {
@@ -30,23 +35,29 @@ func Keys(m map[string]string) []string {
 }
 
 func ParseOptParser(s string) pkg.ParseFunc {
-	switch s {
-	case "downsub":
-		return parsers.ParseDownsub
-	case "srt":
-		return parsers.ParseSRT
-	default:
-		return nil
-	}
+	return registeredParsers[s]
 }
 
 func ParseOptFormatter(s string) pkg.FormatFunc {
-	switch s {
-	case "readlang":
-		return formatters.FormatReadlang
-	case "readlang-api":
-		return formatters.FormatReadlangApi
-	default:
-		return nil
+	return registeredFormatters[s]
+}
+
+func mapKeysParsers(m map[string]pkg.ParseFunc) []string {
+	keys := make([]string, len(m))
+	i := 0
+	for k := range m {
+		keys[i] = k
+		i++
 	}
+	return keys
+}
+
+func mapKeysFormatters(m map[string]pkg.FormatFunc) []string {
+	keys := make([]string, len(m))
+	i := 0
+	for k := range m {
+		keys[i] = k
+		i++
+	}
+	return keys
 }

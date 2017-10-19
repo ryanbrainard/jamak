@@ -12,8 +12,8 @@
                 {{ $selected := .Parser }} <!-- why needed? -->
                 <select class="form-control" id="parser" name="parser">
                     <option></option>
-                    {{range $value, $label := .Capabilities.Parsers }}
-                    <option value="{{ $value }}" {{if (eq $value $selected) }}selected{{end}}>{{ $label }}</option>
+                    {{range $value := .Capabilities.Parsers }}
+                    <option value="{{ $value }}" {{if (eq $value $selected) }}selected{{end}}>{{ $value }}</option>
                     {{end}}
                 </select>
             </div>
@@ -24,8 +24,8 @@
                 {{ $selected := .Formatter }} <!-- why needed? -->
                 <select class="form-control" id="formatter" name="formatter">
                   <option></option>
-                  {{range $value, $label := .Capabilities.Formatters }}
-                    <option value="{{ $value }}" {{if (eq $value $selected) }}selected{{end}}>{{ $label }}</option>
+                  {{range $value := .Capabilities.Formatters }}
+                    <option value="{{ $value }}" {{if (eq $value $selected) }}selected{{end}}>{{ $value }}</option>
                     {{end}}
                 </select>
             </div>
