@@ -40,7 +40,7 @@ func FormatReadlangApi(frames <-chan *pkg.Frame, w io.Writer, options map[string
 		return err
 	}
 
-	fmt.Fprintln(w, readlangUrl+"/library/"+bookId)
+	fmt.Fprint(w, readlangUrl+"/library/"+bookId)
 	return nil
 }
 
