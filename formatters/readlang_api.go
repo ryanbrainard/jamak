@@ -48,7 +48,7 @@ func readlangCreateTempBook(options map[string]string) (string, error) {
 	reqBody, err := json.Marshal(CreateBookRequest{
 		Title:  "jamak temp title",
 		Body: "jamak temp body",
-		Language: options[pkg.OPT_READLANG_LANGUAGE],
+		Language: options[pkg.OPT_LANGUAGE],
 		Public: false,
 		Source: "jamak",
 	})

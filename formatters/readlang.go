@@ -32,9 +32,9 @@ func FormatReadlang(frames <-chan *pkg.Frame, w io.Writer, options map[string]st
 
 		startTime := (startTimeHour * 60 * 60) + (startTimeMin * 60) + startTimeSec
 
-		book.Title = options[pkg.OPT_READLANG_TITLE]
+		book.Title = options[pkg.OPT_TITLE]
 		book.Body += frame.Text + "\n\n"
-		book.YouTubeID = options[pkg.OPT_READLANG_YOUTUBEID]
+		book.YouTubeID = options[pkg.OPT_YOUTUBEID]
 		book.AudioMap = append(book.AudioMap, ReadlangAudiomapFrame{
 			StartTime: startTime,
 			StartWord: frame.StartWord,

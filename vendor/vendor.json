@@ -56,42 +56,6 @@
 			"revisionTime": "2016-03-05T16:54:46Z"
 		},
 		{
-			"checksumSHA1": "1xp9DndpnOu4KgmJyNw149HXl70=",
-			"path": "github.com/ryanbrainard/jamak/cmd",
-			"revision": "b6fd4e2bdae36a13db67ba27516147da5a15323a",
-			"revisionTime": "2017-10-19T11:43:06Z"
-		},
-		{
-			"checksumSHA1": "PY9uCNSD80HoPaGUfQfQrOTUWNo=",
-			"path": "github.com/ryanbrainard/jamak/cmd/jamak",
-			"revision": "b6fd4e2bdae36a13db67ba27516147da5a15323a",
-			"revisionTime": "2017-10-19T11:43:06Z"
-		},
-		{
-			"checksumSHA1": "7qi/yWWYxspdLO7mLuMOGZjxzl0=",
-			"path": "github.com/ryanbrainard/jamak/cmd/jamak-web",
-			"revision": "b6fd4e2bdae36a13db67ba27516147da5a15323a",
-			"revisionTime": "2017-10-19T11:43:06Z"
-		},
-		{
-			"checksumSHA1": "+LB7wcJCM05yUX0h9wLoK3qNMjs=",
-			"path": "github.com/ryanbrainard/jamak/formatters",
-			"revision": "b6fd4e2bdae36a13db67ba27516147da5a15323a",
-			"revisionTime": "2017-10-19T11:43:06Z"
-		},
-		{
-			"checksumSHA1": "4xTvl0djWPk5SPF0shM7c8jtacI=",
-			"path": "github.com/ryanbrainard/jamak/parsers",
-			"revision": "b6fd4e2bdae36a13db67ba27516147da5a15323a",
-			"revisionTime": "2017-10-19T11:43:06Z"
-		},
-		{
-			"checksumSHA1": "L99+Z8dn2B6h367SMnoHkFLpvnw=",
-			"path": "github.com/ryanbrainard/jamak/pkg",
-			"revision": "b6fd4e2bdae36a13db67ba27516147da5a15323a",
-			"revisionTime": "2017-10-19T11:43:06Z"
-		},
-		{
 			"checksumSHA1": "Bn333k9lTndxU3D6n/G5c+GMcYY=",
 			"path": "github.com/stretchr/testify/assert",
 			"revision": "6fe211e493929a8aac0469b93f28b1d0688a9a3a",

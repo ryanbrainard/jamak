@@ -30,7 +30,7 @@ func ParseYoutubeDownsub(r io.Reader, frames chan<- *pkg.Frame, options map[stri
 	if youtubeUrlMatches == nil || len(youtubeUrlMatches) < 6 {
 		return fmt.Errorf("invalid YouTube URL: %s", videoUrl)
 	}
-	options[pkg.OPT_READLANG_YOUTUBEID] = youtubeUrlMatches[5]
+	options[pkg.OPT_YOUTUBEID] = youtubeUrlMatches[5]
 
 	baseUrl, _ := url.Parse("http://downsub.com")
 	searchUrl, _ := baseUrl.Parse("/?url=" + url.QueryEscape(videoUrl.String()))
@@ -42,7 +42,7 @@ func ParseYoutubeDownsub(r io.Reader, frames chan<- *pkg.Frame, options map[stri
 	}
 	defer resp.Body.Close()
 
-	title, srtRelUrl := extractTitleSrtUrl(resp.Body)
+	title, srtRelUrl := extractTitleSrtUrl(resp.Body, options[pkg.OPT_LANGUAGE])
 	if title == "" {
 		return fmt.Errorf("extraction-failed part=title")
 	}
@@ -50,7 +50,9 @@ func ParseYoutubeDownsub(r io.Reader, frames chan<- *pkg.Frame, options map[stri
 		return fmt.Errorf("extraction-failed part=srt-url")
 	}
 
-	options[pkg.OPT_READLANG_TITLE] = title
+	if options[pkg.OPT_TITLE] == "" {
+		options[pkg.OPT_TITLE] = title
+	}
 
 	srtUrl, err := baseUrl.Parse(srtRelUrl)
 	if err != nil {
@@ -68,7 +70,7 @@ func ParseYoutubeDownsub(r io.Reader, frames chan<- *pkg.Frame, options map[stri
 }
 
 // dirty, dirty screen scrapping
-func extractTitleSrtUrl(r io.Reader) (title string, srtUrl string) {
+func extractTitleSrtUrl(r io.Reader, language string) (title string, srtUrl string) {
 	z := html.NewTokenizer(r)
 	titleStack := &tokenStack{}
 	srtStack := &tokenStack{}
@@ -82,24 +84,29 @@ func extractTitleSrtUrl(r io.Reader) (title string, srtUrl string) {
 			if string(z.Raw()) == `<div class="panel-body col-md-7 col-sm-7" id="show">` {
 				srtStack.Push(z.Token())
 			}
-			if srtStack.Depth() > 0 {
+			if srtStack.Depth() >= 1 {
 				name, _ := z.TagName()
 				if string(name) == "a" {
 					srtStack.Push(z.Token())
 				}
 			}
-			if srtStack.Depth() > 1 {
+			if srtStack.Depth() >= 2 {
 				key, value, _ := z.TagAttr()
 				if string(key) == "href" {
 					srtStack.Push(z.Token())
 					srtUrl = string(value)
-					return
 				}
 			}
 		case html.TextToken:
 			if titleStack.Depth() > 0 {
 				title = string(z.Text())
 				titleStack.Pop()
+			}
+			if srtStack.Depth() > 2 {
+				lang := string(z.Text())
+				if strings.Contains(lang, pkg.IsoLangs[language].EnglishName) {
+					return
+				}
 			}
 		case html.EndTagToken:
 			for _, stack := range []*tokenStack{titleStack, srtStack} {

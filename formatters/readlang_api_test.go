@@ -15,7 +15,7 @@ func TestFormatReadlangApi(t *testing.T) {
 	frames, out := setupTestFormat()
 	err := FormatReadlangApi(frames, out, map[string]string{
 		pkg.OPT_READLANG_ACCESS_TOKEN: os.Getenv("READLANG_ACCESS_TOKEN"),
-		pkg.OPT_READLANG_TITLE:        "Test Title",
+		pkg.OPT_TITLE:                 "Test Title",
 	})
 	assert.Nil(t, err)
 }
