@@ -107,7 +107,8 @@ func extractTitleSrtUrl(r io.Reader, languageCode string, trackKind string) (tit
 			if srtStack.Depth() > 2 {
 				lang := string(z.Text())
 				matchesLanguage := strings.Contains(lang, pkg.SupportedLanguages[languageCode])
-				matchesTrackKind := trackKind != "ASR" || strings.Contains(lang, "(auto-generated)")
+				matchesTrackKind := (trackKind == "ASR" && strings.Contains(lang, "(auto-generated)")) ||
+					(trackKind != "ASR" && !strings.Contains(lang, "(auto-generated)"))
 				if potentialSrtUrl != "" && matchesLanguage && matchesTrackKind {
 					srtUrl = potentialSrtUrl
 					return
