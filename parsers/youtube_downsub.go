@@ -44,7 +44,7 @@ func ParseYoutubeDownsub(r io.Reader, frames chan<- *pkg.Frame, options map[stri
 	}
 	defer resp.Body.Close()
 
-	title, srtRelUrl := extractTitleSrtUrl(resp.Body, options[pkg.OPT_LANGUAGE])
+	title, srtRelUrl := extractTitleSrtUrl(resp.Body, options[pkg.OPT_LANGUAGE], options[pkg.OPT_TRACK_KIND])
 	if options[pkg.OPT_TITLE] == "" {
 		if title == "" {
 			return fmt.Errorf("Could not extract title")
@@ -71,7 +71,7 @@ func ParseYoutubeDownsub(r io.Reader, frames chan<- *pkg.Frame, options map[stri
 }
 
 // dirty, dirty screen scrapping
-func extractTitleSrtUrl(r io.Reader, languageCode string) (title string, srtUrl string) {
+func extractTitleSrtUrl(r io.Reader, languageCode string, trackKind string) (title string, srtUrl string) {
 	z := html.NewTokenizer(r)
 	titleStack := &tokenStack{}
 	srtStack := &tokenStack{}
@@ -106,7 +106,9 @@ func extractTitleSrtUrl(r io.Reader, languageCode string) (title string, srtUrl 
 			}
 			if srtStack.Depth() > 2 {
 				lang := string(z.Text())
-				if potentialSrtUrl != "" && strings.Contains(lang, pkg.SupportedLanguages[languageCode]) {
+				matchesLanguage := strings.Contains(lang, pkg.SupportedLanguages[languageCode])
+				matchesTrackKind := trackKind != "ASR" || strings.Contains(lang, "(auto-generated)")
+				if potentialSrtUrl != "" && matchesLanguage && matchesTrackKind {
 					srtUrl = potentialSrtUrl
 					return
 				}

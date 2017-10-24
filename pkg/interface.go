@@ -18,6 +18,7 @@ type FormatFunc func(items <-chan *Frame, writer io.Writer, options map[string]s
 
 const OPT_TITLE = "title"
 const OPT_LANGUAGE = "language"
+const OPT_TRACK_KIND = "trackKind"
 const OPT_YOUTUBEID = "youTubeID"
 const OPT_READLANG_ACCESS_TOKEN = "readlang.access_token"
 const OPT_READLANG_BOOK_ID = "readlang.book_id"
