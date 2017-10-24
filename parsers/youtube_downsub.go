@@ -15,6 +15,8 @@ import (
 
 var YOUTUBE_REGEX = regexp.MustCompile(`^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$`)
 
+// Dirty hack because YouTube API is dumb
+// See https://stackoverflow.com/questions/46864428/how-do-some-sites-download-youtube-captions
 func ParseYoutubeDownsub(r io.Reader, frames chan<- *pkg.Frame, options map[string]string) error {
 	videoUrlBytes, err := ioutil.ReadAll(r)
 	if err != nil {
@@ -28,7 +30,7 @@ func ParseYoutubeDownsub(r io.Reader, frames chan<- *pkg.Frame, options map[stri
 
 	youtubeUrlMatches := YOUTUBE_REGEX.FindStringSubmatch(videoUrl.String())
 	if youtubeUrlMatches == nil || len(youtubeUrlMatches) < 6 {
-		return fmt.Errorf("invalid YouTube URL: %s", videoUrl)
+		return fmt.Errorf("Invalid YouTube URL: %s", videoUrl)
 	}
 	options[pkg.OPT_YOUTUBEID] = youtubeUrlMatches[5]
 
@@ -43,15 +45,14 @@ func ParseYoutubeDownsub(r io.Reader, frames chan<- *pkg.Frame, options map[stri
 	defer resp.Body.Close()
 
 	title, srtRelUrl := extractTitleSrtUrl(resp.Body, options[pkg.OPT_LANGUAGE])
-	if title == "" {
-		return fmt.Errorf("extraction-failed part=title")
+	if options[pkg.OPT_TITLE] == "" {
+		if title == "" {
+			return fmt.Errorf("Could not extract title")
+		}
+		options[pkg.OPT_TITLE] = title
 	}
 	if srtRelUrl == "" {
-		return fmt.Errorf("extraction-failed part=srt-url")
-	}
-
-	if options[pkg.OPT_TITLE] == "" {
-		options[pkg.OPT_TITLE] = title
+		return fmt.Errorf("Could not extract SRT URL")
 	}
 
 	srtUrl, err := baseUrl.Parse(srtRelUrl)
@@ -70,10 +71,11 @@ func ParseYoutubeDownsub(r io.Reader, frames chan<- *pkg.Frame, options map[stri
 }
 
 // dirty, dirty screen scrapping
-func extractTitleSrtUrl(r io.Reader, language string) (title string, srtUrl string) {
+func extractTitleSrtUrl(r io.Reader, languageCode string) (title string, srtUrl string) {
 	z := html.NewTokenizer(r)
 	titleStack := &tokenStack{}
 	srtStack := &tokenStack{}
+	potentialSrtUrl := ""
 	for {
 		switch z.Next() {
 		case html.StartTagToken:
@@ -94,7 +96,7 @@ func extractTitleSrtUrl(r io.Reader, language string) (title string, srtUrl stri
 				key, value, _ := z.TagAttr()
 				if string(key) == "href" {
 					srtStack.Push(z.Token())
-					srtUrl = string(value)
+					potentialSrtUrl = string(value)
 				}
 			}
 		case html.TextToken:
@@ -104,7 +106,8 @@ func extractTitleSrtUrl(r io.Reader, language string) (title string, srtUrl stri
 			}
 			if srtStack.Depth() > 2 {
 				lang := string(z.Text())
-				if strings.Contains(lang, pkg.IsoLangs[language].EnglishName) {
+				if potentialSrtUrl != "" && strings.Contains(lang, pkg.SupportedLanguages[languageCode]) {
+					srtUrl = potentialSrtUrl
 					return
 				}
 			}
